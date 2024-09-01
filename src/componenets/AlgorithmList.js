@@ -1,34 +1,36 @@
-import React from 'react';
+// src/components/AlgorithmList.js
+import React, { useState } from 'react';
+import { sections } from './utils/sectionData';
+import TypingTest from './TypingTest';
 
-const AlgorithmList = ({ sections, onSelect }) => {
-  return (
-    <div>
-      <h2>Select a Programming Topic</h2>
-      {sections.map((section, sectionIndex) => (
-        <div key={sectionIndex}>
-          <h3>{section.title}</h3>
-          <div>
-            {section.items.map((item, itemIndex) => (
-              <div
-                key={itemIndex}
-                onClick={() => onSelect(item)}
-                style={{
-                  cursor: 'pointer',
-                  border: '1px solid #ccc',
-                  padding: '10px',
-                  margin: '10px',
-                  borderRadius: '5px',
-                  backgroundColor: '#f9f9f9',
-                }}
-              >
-                {item.name}
-              </div>
+const AlgorithmList = () => {
+    const [selectedCode, setSelectedCode] = useState(null);
+
+    const handleSelect = (name) => {
+        const foundSection = sections.find((section) =>
+            section.items.some((item) => item.name === name)
+        );
+        const foundItem = foundSection.items.find((item) => item.name === name);
+        setSelectedCode(foundItem.code);
+    };
+
+    return (
+        <div>
+            {sections.map((section, index) => (
+                <div key={index}>
+                    <h2>{section.title}</h2>
+                    <ul>
+                        {section.items.map((item) => (
+                            <li key={item.name} onClick={() => handleSelect(item.name)}>
+                                {item.name}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             ))}
-          </div>
+            {selectedCode && <TypingTest code={selectedCode} />}
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default AlgorithmList;
